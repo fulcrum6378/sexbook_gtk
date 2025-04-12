@@ -1,0 +1,9 @@
+:root {
+    --CP: #FFD422;
+}
+
+.yellow_box {
+    width: 90%;
+    background-color: var(--CP);
+    padding: 10px 10px;
+}

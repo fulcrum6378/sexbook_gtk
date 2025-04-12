@@ -1,12 +1,13 @@
+import os
 import sys
 from typing import Optional
 
 import gi
 
-gi.require_version("Gtk", "4.0")
-from gi.repository import GLib, Gtk
-
 from main import Main
+
+gi.require_version("Gtk", "4.0")
+from gi.repository import Gdk, GLib, Gtk
 
 
 class Sexbook(Gtk.Application):
@@ -20,10 +21,19 @@ class Sexbook(Gtk.Application):
         self.main: Optional[Main] = None
 
     def do_activate(self):
+        # launch Main
         self.main = Main(self)
         self.main.present()
 
+        # load CSS
+        css_provider = Gtk.CssProvider()
+        css_provider.load_from_path(os.path.join(os.path.dirname(__file__), "style.css"))
+        # noinspection PyArgumentList
+        Gtk.StyleContext.add_provider_for_display(
+            Gdk.Display.get_default(),
+            css_provider,
+            Gtk.STYLE_PROVIDER_PRIORITY_APPLICATION
+        )
 
-app = Sexbook()
-exit_status = app.run(sys.argv)
-sys.exit(exit_status)
+
+sys.exit(Sexbook().run(sys.argv))

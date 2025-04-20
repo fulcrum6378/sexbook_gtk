@@ -7,13 +7,18 @@ from typing import Any
 class Model(ABC):
     table_definition: str
 
+    # @staticmethod
+    # @abstractmethod
+    # def default() -> Any:
+    #    pass
+
     @abstractmethod
     def to_json(self) -> dict:
         pass
 
     @staticmethod
     @abstractmethod
-    def from_json(obj: dict) -> Any:
+    def from_json(o: dict) -> Any:
         pass
 
     class Encoder(JSONEncoder):

@@ -45,5 +45,5 @@ class Exporter:
         )
 
     @staticmethod
-    def __replace(db: Database):
+    def replace(db: Database, exported: Exported):
         pass

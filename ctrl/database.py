@@ -3,10 +3,10 @@ from sqlite3.dbapi2 import Connection
 from typing import Type
 
 from ctrl.model import Model
-from data.report import Report
 from data.crush import Crush
-from data.place import Place
 from data.guess import Guess
+from data.place import Place
+from data.report import Report
 
 
 # noinspection SqlNoDataSourceInspection,SqlResolve
@@ -18,10 +18,11 @@ class Database:
     def __init__(self):
         self.con: Connection = sqlite3.connect("sexbook.db")
 
+        # check if tables exist
         for model in [Report, Crush, Place, Guess]:
             self.__ensure_table_exists(model)
 
-    def __ensure_table_exists(self, model: Type[Model]):
+    def __ensure_table_exists(self, model: Type[Model]) -> None:
         if self.__check_if_table_exists(model.__name__): return
         print("Creating table " + model.__name__ + "...")
         cur = self.con.cursor()
@@ -29,7 +30,7 @@ class Database:
         self.con.commit()
         cur.close()
 
-    def __check_if_table_exists(self, table_name: str):
+    def __check_if_table_exists(self, table_name: str) -> bool:
         cur = self.con.cursor()
         cur.execute(
             "SELECT name FROM sqlite_master WHERE type='table' AND name=?", (table_name,)
@@ -38,5 +39,5 @@ class Database:
         cur.close()
         return ret
 
-    def close(self):
+    def close(self) -> None:
         self.con.close()

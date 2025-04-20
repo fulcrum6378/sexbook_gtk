@@ -9,7 +9,7 @@
 }
 .yellow_box {
     background-color: var(--CP);
-    padding: 15px 20px;
+    padding: 15px 30px;
     margin: 0 10%;
     border-radius: 10px;
 }

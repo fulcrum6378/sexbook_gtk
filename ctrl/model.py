@@ -1,16 +1,29 @@
 from abc import ABC, abstractmethod
 from io import UnsupportedOperation
 from json import JSONEncoder
+from sqlite3.dbapi2 import Cursor
 from typing import Any
 
 
 class Model(ABC):
     table_definition: str
 
-    # @staticmethod
-    # @abstractmethod
-    # def default() -> Any:
-    #    pass
+    @staticmethod
+    @abstractmethod
+    def query(id: Any, cursor: Cursor) -> Any:
+        pass
+
+    @abstractmethod
+    def insert(self, cursor: Cursor):
+        pass
+
+    @abstractmethod
+    def update(self, cursor: Cursor):
+        pass
+
+    @abstractmethod
+    def delete(self, cursor: Cursor):
+        pass
 
     @abstractmethod
     def to_json(self) -> dict:

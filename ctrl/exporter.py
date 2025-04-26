@@ -37,13 +37,32 @@ class Exporter:
     def import_(path: str) -> Exported:
         data: dict = json.load(open(path, 'r', encoding='utf-8'))
         return Exporter.Exported(
-            sorted([Report.from_json(i) for i in data['reports']], key=lambda i: i.time),
-            sorted([Crush.from_json(i) for i in data['crushes']], key=lambda i: i.key),
-            sorted([Place.from_json(i) for i in data['places']], key=lambda i: i.name),
-            sorted(sorted([Guess.from_json(i) for i in data['guesses']], key=lambda i: i.name), key=lambda i: i.sinc),
+            sorted(
+                [Report.from_json(i) for i in data['reports']],
+                key=lambda i: i.time
+            ),
+            sorted(
+                [Crush.from_json(i) for i in data['crushes']],
+                key=lambda i: i.key
+            ),
+            sorted(
+                [Place.from_json(i) for i in data['places']],
+                key=lambda i: i.name if i.name is not None else ''
+            ),
+            sorted(
+                sorted(
+                    [Guess.from_json(i) for i in data['guesses']],
+                    key=lambda i: i.crsh if i.crsh is not None else ''
+                ),
+                key=lambda i: i.sinc if i.sinc is not None else 0
+            ),
             data['settings']
         )
 
     @staticmethod
     def replace(db: Database, exported: Exported):
-        pass
+        cur = db.con.cursor()
+        for report in exported.reports:
+            report.insert(cur)
+            # db.con.commit()  TODO is it necessary?
+        # TODO other models...

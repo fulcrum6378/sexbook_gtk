@@ -1,3 +1,4 @@
+import time
 from typing import Any, Optional
 
 from ctrl.model import Model
@@ -17,16 +18,16 @@ class Report(Model):
 )
 """
 
-    # noinspection PyShadowingBuiltins
+    # noinspection PyShadowingBuiltins,PyShadowingNames
     def __init__(self,
-                 id: int,
-                 time: int,
-                 name: Optional[str],
-                 type: int,
-                 desc: Optional[str],
-                 accu: bool,
-                 plac: Optional[int],
-                 ogsm: bool):
+                 id: int = 0,
+                 time: int = time.time() * 1000,
+                 name: Optional[str] = None,
+                 type: int = 1,
+                 desc: Optional[str] = None,
+                 accu: bool = True,
+                 plac: Optional[int] = None,
+                 ogsm: bool = True):
         self.id: int = id
         self.time: int = time
         self.name: Optional[str] = name
@@ -46,7 +47,7 @@ class Report(Model):
             ret['desc'] = self.desc
         if not self.accu:
             ret['accu'] = self.accu
-        if self.plac != -1:
+        if self.plac is not None:
             ret['plac'] = self.plac
         if not self.ogsm:
             ret['ogsm'] = self.ogsm
@@ -61,6 +62,6 @@ class Report(Model):
             o['type'],
             o['desc'] if 'desc' in o else None,
             o['accu'] if 'accu' in o else True,
-            o['desc'] if 'desc' in o else None,
+            o['plac'] if 'plac' in o else None,
             o['ogsm'] if 'ogsm' in o else True,
         )

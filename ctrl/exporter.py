@@ -64,5 +64,10 @@ class Exporter:
         cur = db.con.cursor()
         for report in exported.reports:
             report.insert(cur)
-            # db.con.commit()  TODO is it necessary?
-        # TODO other models...
+        for crush in exported.crushes:
+            crush.insert(cur)
+        for place in exported.places:
+            place.insert(cur)
+        for guess in exported.guesses:
+            guess.insert(cur)
+        db.con.commit()

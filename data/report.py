@@ -1,4 +1,5 @@
 import time
+from sqlite3 import Cursor
 from typing import Any, Optional
 
 from ctrl.model import Model
@@ -36,6 +37,20 @@ class Report(Model):
         self.accu: bool = accu
         self.plac: Optional[int] = plac
         self.ogsm: bool = ogsm
+
+    @staticmethod
+    def query(id: Any, cursor: Cursor) -> Any:
+        cursor.execute("SELECT * FROM Report WHERE id = " + id + " LIMIT 1")
+        cursor.fetchone()
+
+    def insert(self, cursor: Cursor):
+        cursor.execute("INSERT INTO Report")
+
+    def update(self, cursor: Cursor):
+        cursor.execute("")
+
+    def delete(self, cursor: Cursor):
+        cursor.execute("")
 
     def to_json(self) -> dict:
         ret = dict()

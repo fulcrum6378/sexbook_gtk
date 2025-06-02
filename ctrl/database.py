@@ -9,7 +9,6 @@ from data.place import Place
 from data.report import Report
 
 
-# noinspection SqlNoDataSourceInspection,SqlResolve
 class Database:
     """
     :ivar con: the main connection to our one and only SQLite database

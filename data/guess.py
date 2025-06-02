@@ -1,43 +1,22 @@
 from typing import Any, Optional
 
+from sqlalchemy.orm import Mapped, mapped_column
+
 from ctrl.model import Model
 
 
 class Guess(Model):
-    table_definition: str = """
-(
-    `id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
-    `crsh` TEXT,
-    `sinc` INTEGER,
-    `till` INTEGER,
-    `freq` REAL NOT NULL,
-    `type` INTEGER NOT NULL,
-    `desc` TEXT,
-    `plac` INTEGER NOT NULL,
-    `able` INTEGER NOT NULL
-)
-"""
+    __tablename__ = "Guess"
 
-    # noinspection PyShadowingBuiltins,PyShadowingNames
-    def __init__(self,
-                 id: int = 0,
-                 crsh: Optional[str] = None,
-                 sinc: Optional[int] = None,
-                 till: Optional[int] = None,
-                 freq: float = 0,
-                 type: int = 1,
-                 desc: Optional[str] = None,
-                 plac: Optional[int] = None,
-                 able: bool = True):
-        self.id: int = id
-        self.crsh: Optional[str] = crsh
-        self.sinc: Optional[int] = sinc
-        self.till: Optional[int] = till
-        self.freq: float = freq
-        self.type: int = type
-        self.desc: Optional[str] = desc
-        self.plac: Optional[int] = plac
-        self.able: bool = able
+    id: Mapped[int] = mapped_column(primary_key=True)
+    crsh: Mapped[Optional[str]]
+    sinc: Mapped[Optional[int]]
+    till: Mapped[Optional[int]]
+    freq: Mapped[float] = mapped_column(default=0)
+    type: Mapped[int] = mapped_column(default=1)
+    desc: Mapped[Optional[str]]
+    plac: Mapped[Optional[int]]
+    able: Mapped[bool]
 
     def to_json(self) -> dict:
         ret = dict()
@@ -60,13 +39,13 @@ class Guess(Model):
     @staticmethod
     def from_json(o: dict) -> Any:
         return Guess(
-            0,
-            o['crsh'] if 'crsh' in o else None,
-            o['sinc'] if 'sinc' in o else None,
-            o['till'] if 'till' in o else None,
-            o['freq'],
-            o['type'],
-            o['desc'] if 'desc' in o else None,
-            o['plac'] if 'plac' in o else None,
-            o['able'] if 'able' in o else True,
+            id=0,
+            crsh=o['crsh'] if 'crsh' in o else None,
+            sinc=o['sinc'] if 'sinc' in o else None,
+            till=o['till'] if 'till' in o else None,
+            freq=o['freq'],
+            type=o['type'],
+            desc=o['desc'] if 'desc' in o else None,
+            plac=o['plac'] if 'plac' in o else None,
+            able=o['able'] if 'able' in o else True,
         )

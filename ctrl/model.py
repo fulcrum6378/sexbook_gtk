@@ -1,32 +1,18 @@
-from abc import ABC, abstractmethod
+from abc import abstractmethod
 from io import UnsupportedOperation
 from json import JSONEncoder
-from sqlite3.dbapi2 import Cursor
 from typing import Any
 
+from sqlalchemy.orm import DeclarativeBase
 
-class Model(ABC):
-    table_definition: str
 
-    @staticmethod
-    @abstractmethod
-    def query(id: Any, cursor: Cursor) -> Any:
-        pass
-
-    @abstractmethod
-    def insert(self, cursor: Cursor):
-        pass
-
-    @abstractmethod
-    def update(self, cursor: Cursor):
-        pass
-
-    @abstractmethod
-    def delete(self, cursor: Cursor):
-        pass
+class Model(DeclarativeBase):
 
     @abstractmethod
     def to_json(self) -> dict:
+        """
+        Don't call this method before SQLAlchemy processes it.
+        """
         pass
 
     @staticmethod

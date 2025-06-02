@@ -1,49 +1,24 @@
 from typing import Any, Optional
 
+from sqlalchemy.orm import Mapped, mapped_column
+
 from ctrl.model import Model
 
 
 class Crush(Model):
-    table_definition: str = """
-(
-    `key` TEXT NOT NULL,
-    `first_name` TEXT,
-    `middle_name` TEXT,
-    `last_name` TEXT,
-    `status` INTEGER NOT NULL,
-    `birth` TEXT,
-    `height` REAL,
-    `body` INTEGER NOT NULL,
-    `address` TEXT,
-    `first_met` TEXT,
-    `instagram` TEXT,
-    PRIMARY KEY(`key`)
-)
-"""
+    __tablename__ = "Crush"
 
-    def __init__(self,
-                 key: str,
-                 first_name: Optional[str] = None,
-                 middle_name: Optional[str] = None,
-                 last_name: Optional[str] = None,
-                 status: int = 0,
-                 birth: Optional[str] = None,
-                 height: Optional[float] = None,
-                 body: int = 0,
-                 address: Optional[str] = None,
-                 first_met: Optional[str] = None,
-                 instagram: Optional[str] = None):
-        self.key: str = key
-        self.first_name: Optional[str] = first_name
-        self.middle_name: Optional[str] = middle_name
-        self.last_name: Optional[str] = last_name
-        self.status: int = status
-        self.birth: Optional[str] = birth
-        self.height: Optional[float] = height
-        self.body: int = body
-        self.address: Optional[str] = address
-        self.first_met: Optional[str] = first_met
-        self.instagram: Optional[str] = instagram
+    key: Mapped[str] = mapped_column(primary_key=True)
+    first_name: Mapped[Optional[str]]
+    middle_name: Mapped[Optional[str]]
+    last_name: Mapped[Optional[str]]
+    status: Mapped[int] = mapped_column(default=0)
+    birth: Mapped[Optional[str]]
+    height: Mapped[Optional[float]]
+    body: Mapped[int] = mapped_column(default=0)
+    address: Mapped[Optional[str]]
+    first_met: Mapped[Optional[str]]
+    instagram: Mapped[Optional[str]]
 
     def to_json(self) -> dict:
         ret = dict()
@@ -73,15 +48,15 @@ class Crush(Model):
     @staticmethod
     def from_json(o: dict) -> Any:
         return Crush(
-            o['key'],
-            o['first_name'] if 'first_name' in o else None,
-            o['middle_name'] if 'middle_name' in o else None,
-            o['last_name'] if 'last_name' in o else None,
-            o['status'] if 'status' in o else 0,
-            o['birth'] if 'birth' in o else None,
-            o['height'] if 'height' in o else None,
-            o['body'] if 'body' in o else 0,
-            o['address'] if 'address' in o else None,
-            o['first_met'] if 'first_met' in o else None,
-            o['instagram'] if 'instagram' in o else None,
+            key=o['key'],
+            first_name=o['first_name'] if 'first_name' in o else None,
+            middle_name=o['middle_name'] if 'middle_name' in o else None,
+            last_name=o['last_name'] if 'last_name' in o else None,
+            status=o['status'] if 'status' in o else 0,
+            birth=o['birth'] if 'birth' in o else None,
+            height=o['height'] if 'height' in o else None,
+            body=o['body'] if 'body' in o else 0,
+            address=o['address'] if 'address' in o else None,
+            first_met=o['first_met'] if 'first_met' in o else None,
+            instagram=o['instagram'] if 'instagram' in o else None,
         )

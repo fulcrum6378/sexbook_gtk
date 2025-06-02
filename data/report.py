@@ -1,56 +1,21 @@
-import time
-from sqlite3 import Cursor
 from typing import Any, Optional
+
+from sqlalchemy.orm import Mapped, mapped_column
 
 from ctrl.model import Model
 
 
 class Report(Model):
-    table_definition: str = """
-(
-    `id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
-    `time` INTEGER NOT NULL,
-    `name` TEXT,
-    `type` INTEGER NOT NULL,
-    `desc` TEXT,
-    `accu` INTEGER NOT NULL,
-    `plac` INTEGER,
-    `ogsm` INTEGER NOT NULL
-)
-"""
+    __tablename__ = "Report"
 
-    # noinspection PyShadowingBuiltins,PyShadowingNames
-    def __init__(self,
-                 id: int = 0,
-                 time: int = time.time() * 1000,
-                 name: Optional[str] = None,
-                 type: int = 1,
-                 desc: Optional[str] = None,
-                 accu: bool = True,
-                 plac: Optional[int] = None,
-                 ogsm: bool = True):
-        self.id: int = id
-        self.time: int = time
-        self.name: Optional[str] = name
-        self.type: int = type
-        self.desc: Optional[str] = desc
-        self.accu: bool = accu
-        self.plac: Optional[int] = plac
-        self.ogsm: bool = ogsm
-
-    @staticmethod
-    def query(id: Any, cursor: Cursor) -> Any:
-        cursor.execute("SELECT * FROM Report WHERE id = " + id + " LIMIT 1")
-        cursor.fetchone()
-
-    def insert(self, cursor: Cursor):
-        cursor.execute("INSERT INTO Report")
-
-    def update(self, cursor: Cursor):
-        cursor.execute("")
-
-    def delete(self, cursor: Cursor):
-        cursor.execute("")
+    id: Mapped[int] = mapped_column(primary_key=True)
+    time: Mapped[int]
+    name: Mapped[Optional[str]]
+    type: Mapped[int] = mapped_column(default=1)
+    desc: Mapped[Optional[str]]
+    accu: Mapped[bool] = mapped_column(default=True)
+    plac: Mapped[Optional[int]]
+    ogsm: Mapped[bool] = mapped_column(default=True)
 
     def to_json(self) -> dict:
         ret = dict()
@@ -71,12 +36,12 @@ class Report(Model):
     @staticmethod
     def from_json(o: dict) -> Any:
         return Report(
-            0,
-            o['time'],
-            o['name'] if 'name' in o else None,
-            o['type'],
-            o['desc'] if 'desc' in o else None,
-            o['accu'] if 'accu' in o else True,
-            o['plac'] if 'plac' in o else None,
-            o['ogsm'] if 'ogsm' in o else True,
+            id=0,
+            time=o['time'],
+            name=o['name'] if 'name' in o else None,
+            type=o['type'],
+            desc=o['desc'] if 'desc' in o else None,
+            accu=o['accu'] if 'accu' in o else True,
+            plac=o['plac'] if 'plac' in o else None,
+            ogsm=o['ogsm'] if 'ogsm' in o else True,
         )

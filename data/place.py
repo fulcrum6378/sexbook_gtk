@@ -1,28 +1,17 @@
 from typing import Any, Optional
 
+from sqlalchemy.orm import Mapped, mapped_column
+
 from ctrl.model import Model
 
 
 class Place(Model):
-    table_definition: str = """
-(
-    `id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
-    `name` TEXT,
-    `latitude` REAL,
-    `longitude` REAL
-)
-"""
+    __tablename__ = "Place"
 
-    # noinspection PyShadowingBuiltins
-    def __init__(self,
-                 id: int = 0,
-                 name: Optional[str] = None,
-                 latitude: Optional[float] = None,
-                 longitude: Optional[float] = None):
-        self.id: int = id
-        self.name: Optional[str] = name
-        self.latitude: Optional[float] = latitude
-        self.longitude: Optional[float] = longitude
+    id: Mapped[int] = mapped_column(primary_key=True)
+    name: Mapped[Optional[str]]
+    latitude: Mapped[Optional[float]]
+    longitude: Mapped[Optional[float]]
 
     def to_json(self) -> dict:
         ret = dict()
@@ -38,8 +27,8 @@ class Place(Model):
     @staticmethod
     def from_json(o: dict) -> Any:
         return Place(
-            o['id'],
-            o['name'] if 'name' in o else None,
-            o['latitude'] if 'latitude' in o else None,
-            o['longitude'] if 'longitude' in o else None,
+            id=o['id'],
+            name=o['name'] if 'name' in o else None,
+            latitude=o['latitude'] if 'latitude' in o else None,
+            longitude=o['longitude'] if 'longitude' in o else None,
         )

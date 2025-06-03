@@ -1,7 +1,6 @@
 from abc import abstractmethod
 from io import UnsupportedOperation
 from json import JSONEncoder
-from typing import Any
 
 from sqlalchemy.orm import DeclarativeBase
 
@@ -11,13 +10,13 @@ class Model(DeclarativeBase):
     @abstractmethod
     def to_json(self) -> dict:
         """
-        Don't call this method before SQLAlchemy processes it.
+        Don't call this method before SQLAlchemy processes an instance of this class.
         """
         pass
 
     @staticmethod
     @abstractmethod
-    def from_json(o: dict) -> Any:
+    def from_json(o: dict):
         pass
 
     class Encoder(JSONEncoder):

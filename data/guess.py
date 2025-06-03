@@ -1,14 +1,14 @@
-from typing import Any, Optional
+from typing import Optional
 
 from sqlalchemy.orm import Mapped, mapped_column
 
-from ctrl.model import Model
+from base import Model
 
 
 class Guess(Model):
     __tablename__ = "Guess"
 
-    id: Mapped[int] = mapped_column(primary_key=True)
+    id: Mapped[int] = mapped_column(primary_key=True, autoincrement=True)
     crsh: Mapped[Optional[str]]
     sinc: Mapped[Optional[int]]
     till: Mapped[Optional[int]]
@@ -37,9 +37,8 @@ class Guess(Model):
         return ret
 
     @staticmethod
-    def from_json(o: dict) -> Any:
+    def from_json(o: dict):
         return Guess(
-            id=0,
             crsh=o['crsh'] if 'crsh' in o else None,
             sinc=o['sinc'] if 'sinc' in o else None,
             till=o['till'] if 'till' in o else None,

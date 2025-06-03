@@ -1,14 +1,14 @@
-from typing import Any, Optional
+from typing import Optional
 
 from sqlalchemy.orm import Mapped, mapped_column
 
-from ctrl.model import Model
+from base import Model
 
 
 class Report(Model):
     __tablename__ = "Report"
 
-    id: Mapped[int] = mapped_column(primary_key=True)
+    id: Mapped[int] = mapped_column(primary_key=True, autoincrement=True)
     time: Mapped[int]
     name: Mapped[Optional[str]]
     type: Mapped[int] = mapped_column(default=1)
@@ -16,6 +16,16 @@ class Report(Model):
     accu: Mapped[bool] = mapped_column(default=True)
     plac: Mapped[Optional[int]]
     ogsm: Mapped[bool] = mapped_column(default=True)
+
+    # noinspection PyAttributeOutsideInit
+    def analyse(self):
+        self.analysis = map(
+            lambda s: s.strip(),
+            (self.name.replace(" and ", " + ")
+             .replace(" & ", " + ")
+             .replace(", ", " + ")
+             .split(" + "))
+        ) if self.name else list()
 
     def to_json(self) -> dict:
         ret = dict()
@@ -34,9 +44,8 @@ class Report(Model):
         return ret
 
     @staticmethod
-    def from_json(o: dict) -> Any:
+    def from_json(o: dict):
         return Report(
-            id=0,
             time=o['time'],
             name=o['name'] if 'name' in o else None,
             type=o['type'],

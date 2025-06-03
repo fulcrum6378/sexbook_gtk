@@ -1,10 +1,8 @@
 import json
 
-from ctrl.database import Database
-from data.crush import Crush
-from data.guess import Guess
-from data.place import Place
-from data.report import Report
+from sqlalchemy.orm import Session
+
+from data import *
 
 
 class Exporter:
@@ -30,8 +28,8 @@ class Exporter:
             self.settings: dict = settings
 
     @staticmethod
-    def export(db: Database):
-        pass
+    def export(session: Session):
+        pass  # TODO
 
     @staticmethod
     def import_(path: str) -> Exported:
@@ -60,14 +58,9 @@ class Exporter:
         )
 
     @staticmethod
-    def replace(db: Database, exported: Exported):
-        cur = db.con.cursor()
-        for report in exported.reports:
-            report.insert(cur)
-        for crush in exported.crushes:
-            crush.insert(cur)
-        for place in exported.places:
-            place.insert(cur)
-        for guess in exported.guesses:
-            guess.insert(cur)
-        db.con.commit()
+    def replace(session: Session, exported: Exported):
+        session.add_all(exported.reports)
+        session.add_all(exported.crushes)
+        session.add_all(exported.places)
+        session.add_all(exported.guesses)
+        session.commit()

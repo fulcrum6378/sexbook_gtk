@@ -1,18 +1,19 @@
 import gi
 
 from base import BaseAppWindow
+from data import Crush
 
 gi.require_version("Gtk", "4.0")
 from gi.repository import Gtk
 
 
-class Main(BaseAppWindow):
-    """
-    :ivar list_box
-    """
+class People(BaseAppWindow):
 
     def __init__(self, application: Gtk.Application):
-        super().__init__(application, "Sexbook")
+        super().__init__(application, "Sexbook - People")
+
+        # data
+        self.list: list[Crush] = list(self.c.people.values())
 
         # scroller
         scroller: Gtk.ScrolledWindow = Gtk.ScrolledWindow()
@@ -25,7 +26,9 @@ class Main(BaseAppWindow):
         self.arrangeList()
 
     def arrangeList(self):
-        for i in range(20):
+        self.list.sort(key=lambda p: p.vis_name().lower())
+        i = 0
+        for person in self.list:
             list_row = Gtk.ListBoxRow()
             self.list_box.insert(list_row, -1)  # -1 appends to the end.
 
@@ -37,5 +40,7 @@ class Main(BaseAppWindow):
             box.add_css_class("yellow_box")
             list_row.set_child(box)
 
-            label = Gtk.Label(label=f"Item {i + 1}")
+            label = Gtk.Label(label=f"{i + 1}. {person.vis_name()}")
             box.append(label)
+
+            i += 1

@@ -1,14 +1,14 @@
-from typing import Any, Optional
+from typing import Optional
 
 from sqlalchemy.orm import Mapped, mapped_column
 
-from ctrl.model import Model
+from base import Model
 
 
 class Place(Model):
     __tablename__ = "Place"
 
-    id: Mapped[int] = mapped_column(primary_key=True)
+    id: Mapped[int] = mapped_column(primary_key=True, autoincrement=False)  # must never be altered
     name: Mapped[Optional[str]]
     latitude: Mapped[Optional[float]]
     longitude: Mapped[Optional[float]]
@@ -25,9 +25,9 @@ class Place(Model):
         return ret
 
     @staticmethod
-    def from_json(o: dict) -> Any:
+    def from_json(o: dict):
         return Place(
-            id=o['id'],
+            id=o['id'],  # must never be altered
             name=o['name'] if 'name' in o else None,
             latitude=o['latitude'] if 'latitude' in o else None,
             longitude=o['longitude'] if 'longitude' in o else None,

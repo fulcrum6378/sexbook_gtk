@@ -1,10 +1,14 @@
 import os
 import sys
-from typing import Optional
 
 import gi
+from sqlalchemy import create_engine, select
+from sqlalchemy.engine.base import Engine
+from sqlalchemy.orm import Session
 
-from main import Main
+from base import Model
+from data import *
+from people import People
 
 gi.require_version("Gtk", "4.0")
 from gi.repository import Gdk, GLib, Gtk
@@ -12,19 +16,32 @@ from gi.repository import Gdk, GLib, Gtk
 
 class Sexbook(Gtk.Application):
     """
-    :ivar main: the `Main` window
+    :ivar db: SQLAlchemy database engine
+    :ivar reports: all [Report] instances in the database
+    :ivar people: all [Crush] instances in the database
+    :ivar places: all [Place] instances in the database
+    :ivar guesses: all [Guess] instances in the database
     """
 
+    # noinspection PyTypeChecker
     def __init__(self):
         super().__init__(application_id="ir.mahdiparastesh.Sexbook")
         GLib.set_application_name("Sexbook")
-        self.main: Optional[Main] = None
+
+        # initialise the database
+        self.db: Engine = create_engine("sqlite:///sexbook.db")
+        Model.metadata.create_all(self.db)
+
+        # load the entire database (all necessary!)
+        with Session(self.db) as session:
+            self.reports: dict[Report] = \
+                dict(map(lambda r: (r.id, r), session.scalars(select(Report)).all()))
+            self.people: dict[Crush] = \
+                dict(map(lambda p: (p.key, p), session.scalars(select(Crush)).all()))
+            self.places: list[Place] = session.scalars(select(Place)).all()
+            self.guesses: list[Guess] = session.scalars(select(Guess)).all()
 
     def do_activate(self):
-        # launch Main
-        self.main = Main(self)
-        self.main.present()
-
         # load CSS
         css_provider = Gtk.CssProvider()
         css_provider.load_from_path(os.path.join(os.path.dirname(__file__), "style.css"))
@@ -34,6 +51,10 @@ class Sexbook(Gtk.Application):
             css_provider,
             Gtk.STYLE_PROVIDER_PRIORITY_APPLICATION
         )
+
+        # launch Main
+        # Main(self).present()
+        People(self).present()
 
 
 sys.exit(Sexbook().run(sys.argv))

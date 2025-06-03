@@ -1,8 +1,8 @@
-from typing import Any, Optional
+from typing import Optional
 
 from sqlalchemy.orm import Mapped, mapped_column
 
-from ctrl.model import Model
+from base import Model
 
 
 class Crush(Model):
@@ -19,6 +19,15 @@ class Crush(Model):
     address: Mapped[Optional[str]]
     first_met: Mapped[Optional[str]]
     instagram: Mapped[Optional[str]]
+
+    def vis_name(self) -> str:
+        if self.first_name and self.last_name:
+            return f"{self.first_name} {self.last_name}"
+        else:
+            if self.first_name: return self.first_name
+            if self.last_name: return self.last_name
+            if self.middle_name: return self.middle_name
+            return self.key
 
     def to_json(self) -> dict:
         ret = dict()
@@ -46,7 +55,7 @@ class Crush(Model):
         return ret
 
     @staticmethod
-    def from_json(o: dict) -> Any:
+    def from_json(o: dict):
         return Crush(
             key=o['key'],
             first_name=o['first_name'] if 'first_name' in o else None,

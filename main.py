@@ -24,14 +24,32 @@ class Main(BaseAppWindow):
         self.filters: set[Report.Filter] = set()
         self.filter: Optional[Report.Filter] = None
 
-        # scroller
-        scroller: Gtk.ScrolledWindow = Gtk.ScrolledWindow()
-        self.set_child(scroller)
+        # root layout
+        root = Gtk.Box(orientation=Gtk.Orientation.VERTICAL)
+        self.set_child(root)
+        cl = Gtk.ConstraintLayout()
+        self.set_layout_manager(cl)
 
-        # list_box
+        # list layout
+        scroller = Gtk.ScrolledWindow()
+        root.append(scroller)
         self.list_box: Gtk.ListBox = Gtk.ListBox()
         self.list_box.add_css_class("yellow_box_lister")
         scroller.set_child(self.list_box)
+
+        # dropdown
+        dropdown = Gtk.DropDown()
+        dropdown.set_model(Gtk.StringList.new(["Option A", "Option B", "Option C"]))
+        root.append(dropdown)
+
+        # layout constraints
+        cl.add_constraint(
+            Gtk.Constraint.new(
+                dropdown, Gtk.ConstraintAttribute.BOTTOM,
+                Gtk.ConstraintRelation.EQ,
+                root, Gtk.ConstraintAttribute.BOTTOM,
+                12, 12, Gtk.ConstraintStrength.REQUIRED)
+        )
 
         # begin filtering and arranging
         self.reset()
@@ -39,9 +57,6 @@ class Main(BaseAppWindow):
     def reset(self):
         self.create_filters()
         self.filter = list(self.filters)[-1 if self.filter is None else self.filter]
-        print(self.filters)
-        print(self.filter)
-        # TODO sort list of IDs
         self.arrangeList()
 
     def create_filters(self):

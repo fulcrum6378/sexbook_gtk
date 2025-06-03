@@ -1,14 +1,13 @@
 import os
-import sys
 
 import gi
 from sqlalchemy import create_engine, select
 from sqlalchemy.engine.base import Engine
 from sqlalchemy.orm import Session
 
-from base import Model
-from data import *
-from main import Main
+from sexbook.base import Model
+from sexbook.data import *
+from sexbook.main import Main
 
 gi.require_version("Gtk", "4.0")
 from gi.repository import Gdk, GLib, Gtk
@@ -16,6 +15,8 @@ from gi.repository import Gdk, GLib, Gtk
 
 class Sexbook(Gtk.Application):
     """
+    :ivar resources_dir
+    :ivar data_dir
     :ivar db: SQLAlchemy database engine
     :ivar reports: all [Report] instances in the database
     :ivar people: all [Crush] instances in the database
@@ -28,8 +29,12 @@ class Sexbook(Gtk.Application):
         super().__init__(application_id="ir.mahdiparastesh.Sexbook")
         GLib.set_application_name("Sexbook")
 
+        # necessary fields
+        self.resources_dir: str = os.path.join(os.path.dirname(os.path.dirname(__file__)), "resources")
+        self.data_dir: str = os.path.join(os.path.dirname(os.path.dirname(__file__)), "data")
+
         # initialise the database
-        self.db: Engine = create_engine("sqlite:///sexbook.db")
+        self.db: Engine = create_engine("sqlite:///data/sexbook.db")
         Model.metadata.create_all(self.db)
 
         # load the entire database (all necessary!)
@@ -42,13 +47,11 @@ class Sexbook(Gtk.Application):
             self.guesses: list[Guess] = session.scalars(select(Guess)).all()
 
     def do_activate(self):
-        # load CSS
-        css_provider = Gtk.CssProvider()
-        css_provider.load_from_path(os.path.join(os.path.dirname(__file__), "style.css"))
+        # load the global CSS
         # noinspection PyArgumentList
         Gtk.StyleContext.add_provider_for_display(
             Gdk.Display.get_default(),
-            css_provider,
+            self.load_css("global"),
             Gtk.STYLE_PROVIDER_PRIORITY_APPLICATION
         )
 
@@ -56,5 +59,7 @@ class Sexbook(Gtk.Application):
         Main(self).present()
         # People(self).present()
 
-
-sys.exit(Sexbook().run(sys.argv))
+    def load_css(self, name: str) -> Gtk.CssProvider:
+        css_provider = Gtk.CssProvider()
+        css_provider.load_from_path(os.path.join(self.resources_dir, "css", f"{name}.css"))
+        return css_provider

@@ -10,3 +10,7 @@ class BaseAppWindow(Gtk.ApplicationWindow):
         super().__init__(application=application, title=title)
         self.c = self.get_application()
         self.set_size_request(800, 600)
+
+    def load_css(self, name: str):
+        self.get_style_context() \
+            .add_provider(self.c.load_css(name), Gtk.STYLE_PROVIDER_PRIORITY_APPLICATION)

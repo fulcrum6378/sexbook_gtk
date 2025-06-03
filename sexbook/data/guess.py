@@ -2,7 +2,7 @@ from typing import Optional
 
 from sqlalchemy.orm import Mapped, mapped_column
 
-from base import Model
+from sexbook.base import Model
 
 
 class Guess(Model):

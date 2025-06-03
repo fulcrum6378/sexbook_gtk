@@ -2,7 +2,7 @@ import json
 
 from sqlalchemy.orm import Session
 
-from data import *
+from sexbook.data import *
 
 
 class Exporter:

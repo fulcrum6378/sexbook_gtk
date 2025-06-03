@@ -1,3 +1,4 @@
+from datetime import datetime
 from typing import Optional
 
 from sqlalchemy.orm import Mapped, mapped_column
@@ -54,3 +55,49 @@ class Report(Model):
             plac=o['plac'] if 'plac' in o else None,
             ogsm=o['ogsm'] if 'ogsm' in o else True,
         )
+
+    class Filter:
+        """
+        A timeframe for dividing a long list of `Reports`
+
+        :ivar id a sortable hash integer made out of `year` and `month`
+        :ivar year
+        :ivar month
+        :ivar reports ID numbers of the `Report`s that belong to this timeframe
+        """
+
+        def __init__(self, year: int, month: int):
+            self.year: int = year
+            self.month: int = month
+            self.id = (self.year << 4) | self.month
+            self.reports: list[int] = list()
+
+        @classmethod
+        def from_timestamp(cls, timestamp: int):
+            dt = datetime.fromtimestamp(timestamp / 1000.0)
+            return cls(dt.year, dt.month)
+
+        def __hash__(self):
+            return self.id
+
+        def __eq__(self, other):
+            return self.id == other.__hash__()
+
+        def __ne__(self, other):
+            return self.id != other.__hash__()
+
+        def __lt__(self, other):
+            return self.id < other.__hash__()
+
+        def __le__(self, other):
+            return self.id <= other.__hash__()
+
+        def __gt__(self, other):
+            return self.id > other.__hash__()
+
+        def __ge__(self, other):
+            return self.id >= other.__hash__()
+
+        def __repr__(self):
+            return (f"Filter-{self.year}.{self.month}-"
+                    f"({len(self.reports)} item{"s" if len(self.reports) != 1 else ""})")

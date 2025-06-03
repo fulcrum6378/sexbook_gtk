@@ -1,4 +1,4 @@
-# Sexbook GTK
+# Sexbook <small>(GTK version)</small>
 
 ### Setup
 

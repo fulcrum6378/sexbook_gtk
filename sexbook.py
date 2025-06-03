@@ -8,7 +8,7 @@ from sqlalchemy.orm import Session
 
 from base import Model
 from data import *
-from people import People
+from main import Main
 
 gi.require_version("Gtk", "4.0")
 from gi.repository import Gdk, GLib, Gtk
@@ -52,9 +52,9 @@ class Sexbook(Gtk.Application):
             Gtk.STYLE_PROVIDER_PRIORITY_APPLICATION
         )
 
-        # launch Main
-        # Main(self).present()
-        People(self).present()
+        # launch the main page
+        Main(self).present()
+        # People(self).present()
 
 
 sys.exit(Sexbook().run(sys.argv))

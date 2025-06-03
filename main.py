@@ -1,6 +1,9 @@
+from typing import Optional
+
 import gi
 
 from base import BaseAppWindow
+from data import Report
 
 gi.require_version("Gtk", "4.0")
 from gi.repository import Gtk
@@ -8,11 +11,18 @@ from gi.repository import Gtk
 
 class Main(BaseAppWindow):
     """
+    :ivar filters a list of all `Report.Filter`s
+    :iver filter a `Report.Filter` chosen out of the list of `filters`
+
     :ivar list_box
     """
 
     def __init__(self, application: Gtk.Application):
         super().__init__(application, "Sexbook")
+
+        # default fields
+        self.filters: set[Report.Filter] = set()
+        self.filter: Optional[Report.Filter] = None
 
         # scroller
         scroller: Gtk.ScrolledWindow = Gtk.ScrolledWindow()
@@ -22,10 +32,36 @@ class Main(BaseAppWindow):
         self.list_box: Gtk.ListBox = Gtk.ListBox()
         self.list_box.add_css_class("yellow_box_lister")
         scroller.set_child(self.list_box)
+
+        # begin filtering and arranging
+        self.reset()
+
+    def reset(self):
+        self.create_filters()
+        self.filter = list(self.filters)[-1 if self.filter is None else self.filter]
+        print(self.filters)
+        print(self.filter)
+        # TODO sort list of IDs
         self.arrangeList()
 
+    def create_filters(self):
+        self.filters = list()
+        for id, r in self.c.reports.items():
+            f = Report.Filter.from_timestamp(r.time)
+            try:
+                index = self.filters.index(f)
+                f = self.filters[index]
+            except ValueError:
+                self.filters.append(f)
+            f.reports.append(id)
+        self.filters.sort()
+
+    # noinspection PyShadowingNames
     def arrangeList(self):
-        for i in range(20):
+        self.filter.reports.sort(key=lambda r_id: self.c.reports[r_id].time)
+        for r_id in self.filter.reports:
+            report = self.c.reports[r_id]
+
             list_row = Gtk.ListBoxRow()
             self.list_box.insert(list_row, -1)  # -1 appends to the end.
 
@@ -37,5 +73,5 @@ class Main(BaseAppWindow):
             box.add_css_class("yellow_box")
             list_row.set_child(box)
 
-            label = Gtk.Label(label=f"Item {i + 1}")
+            label = Gtk.Label(label=report.name)
             box.append(label)

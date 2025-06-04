@@ -1,3 +1,5 @@
+import os
+
 import gi
 
 gi.require_version("Gtk", "4.0")
@@ -5,11 +7,23 @@ from gi.repository import Gtk
 
 
 class BaseAppWindow(Gtk.ApplicationWindow):
+    """
+    :ivar c `Sexbook` application context
+    :ivar id a unique short string identifier for this application window
+    :ivar ui `Gtk.Builder` having loaded the default UI of this application window
+    """
 
-    def __init__(self, application: Gtk.Application, title: str):
-        super().__init__(application=application, title=title)
+    def __init__(self, application: Gtk.Application, id: str):
+        super().__init__(application=application,
+                         title="Sexbook" + (f" - {id.capitalize()}" if id != "main" else ""))
         self.c = self.get_application()
+        self.id = id
         self.set_size_request(800, 600)
+
+        # load UI
+        self.ui = Gtk.Builder()
+        self.ui.add_from_file(os.path.join(self.c.resources_dir, "ui", f"{self.id}.ui"))
+        self.set_child(self.ui.get_objects()[0])
 
     def load_css(self, name: str):
         self.get_style_context() \

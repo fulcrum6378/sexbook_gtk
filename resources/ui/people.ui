@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<interface>
+    <requires lib="gtk" version="4.0"/>
+    <object class="GtkScrolledWindow">
+        <child>
+            <object class="GtkListBox" id="list">
+                <property name="css-classes">yellow_box_lister</property>
+            </object>
+        </child>
+    </object>
+</interface>

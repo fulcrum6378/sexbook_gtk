@@ -10,19 +10,13 @@ from gi.repository import Gtk
 class People(BaseAppWindow):
 
     def __init__(self, application: Gtk.Application):
-        super().__init__(application, "Sexbook - People")
+        super().__init__(application, "people")
 
         # data
         self.list: list[Crush] = list(self.c.people.values())
 
-        # scroller
-        scroller: Gtk.ScrolledWindow = Gtk.ScrolledWindow()
-        self.set_child(scroller)
-
         # list_box
-        self.list_box: Gtk.ListBox = Gtk.ListBox()
-        self.list_box.add_css_class("yellow_box_lister")
-        scroller.set_child(self.list_box)
+        self.list_box = self.ui.get_object("list")
         self.arrangeList()
 
     def arrangeList(self):

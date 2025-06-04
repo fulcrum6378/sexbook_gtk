@@ -12,13 +12,13 @@ from gi.repository import Gtk
 class Main(BaseAppWindow):
     """
     :ivar filters a list of all `Report.Filter`s
-    :iver filter a `Report.Filter` chosen out of the list of `filters`
+    :ivar filter a `Report.Filter` chosen out of the list of `filters`
 
     :ivar list_box
     """
 
     def __init__(self, application: Gtk.Application):
-        super().__init__(application, "Sexbook")
+        super().__init__(application, "main")
 
         # default fields
         self.filters: set[Report.Filter] = set()

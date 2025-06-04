@@ -5,6 +5,7 @@ from sqlalchemy import create_engine, select
 from sqlalchemy.engine.base import Engine
 from sqlalchemy.orm import Session
 
+from sexbook.people import People
 from sexbook.base import Model
 from sexbook.data import *
 from sexbook.main import Main
@@ -56,8 +57,8 @@ class Sexbook(Gtk.Application):
         )
 
         # launch the main page
-        Main(self).present()
-        # People(self).present()
+        # Main(self).present()
+        People(self).present()
 
     def load_css(self, name: str) -> Gtk.CssProvider:
         css_provider = Gtk.CssProvider()

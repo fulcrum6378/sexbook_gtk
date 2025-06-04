@@ -5,10 +5,9 @@ from sqlalchemy import create_engine, select
 from sqlalchemy.engine.base import Engine
 from sqlalchemy.orm import Session
 
-from sexbook.people import People
 from sexbook.base import Model
 from sexbook.data import *
-from sexbook.main import Main
+from sexbook.page import People
 
 gi.require_version("Gtk", "4.0")
 from gi.repository import Gdk, GLib, Gtk

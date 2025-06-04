@@ -2,14 +2,14 @@ from typing import Optional
 
 import gi
 
-from sexbook.base import BaseAppWindow
+from sexbook.base import BasePage
 from sexbook.data import Report
 
 gi.require_version("Gtk", "4.0")
 from gi.repository import Gtk
 
 
-class Main(BaseAppWindow):
+class Main(BasePage):
     """
     :ivar filters a list of all `Report.Filter`s
     :ivar filter a `Report.Filter` chosen out of the list of `filters`

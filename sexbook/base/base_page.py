@@ -4,11 +4,11 @@ gi.require_version("Gtk", "4.0")
 from gi.repository import Gtk
 
 
-class BaseAppWindow(Gtk.ApplicationWindow):
+class BasePage(Gtk.ApplicationWindow):
     """
     :ivar c `Sexbook` application context
-    :ivar id a unique short string identifier for this application window
-    :ivar ui `Gtk.Builder` having loaded the default UI of this application window
+    :ivar id a unique short string identifier for this page
+    :ivar ui `Gtk.Builder` having loaded the default UI of this page
     """
 
     def __init__(self, application: Gtk.Application, id: str):

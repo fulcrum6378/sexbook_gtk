@@ -1,3 +1,3 @@
-from .base_app_window import BaseAppWindow
-from .base_list_row import BaseListRow
+from .base_list_item import BaseListItem
+from .base_page import BasePage
 from .model import Model

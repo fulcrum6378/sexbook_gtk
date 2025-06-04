@@ -1,17 +1,17 @@
 import gi
 
-from .base_app_window import BaseAppWindow
+from .base_page import BasePage
 
 gi.require_version("Gtk", "4.0")
 from gi.repository import Gtk
 
 
-class BaseListRow(Gtk.ListBoxRow):
+class BaseListItem(Gtk.ListBoxRow):
     """
-    :ivar c any `BaseAppWindow` application window context
+    :ivar c `BasePage` context
     """
 
-    def __init__(self, c: BaseAppWindow, **properties):
+    def __init__(self, c: BasePage, **properties):
         super().__init__(**properties)
         self.c = c
 

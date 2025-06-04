@@ -60,6 +60,11 @@ class Sexbook(Gtk.Application):
         # Main(self).present()
         People(self).present()
 
+    def load_ui(self, name: str) -> Gtk.Builder:
+        builder = Gtk.Builder()
+        builder.add_from_file(os.path.join(self.resources_dir, "ui", f"{name}.ui"))
+        return builder
+
     def load_css(self, name: str) -> Gtk.CssProvider:
         css_provider = Gtk.CssProvider()
         css_provider.load_from_path(os.path.join(self.resources_dir, "css", f"{name}.css"))

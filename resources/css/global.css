@@ -13,3 +13,6 @@
     margin: 0;
     border-radius: 10px;
 }
+.yellow_box > textview {
+    background-color: transparent;
+}

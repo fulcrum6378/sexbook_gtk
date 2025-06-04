@@ -1,5 +1,3 @@
-import os
-
 import gi
 
 gi.require_version("Gtk", "4.0")
@@ -21,8 +19,7 @@ class BaseAppWindow(Gtk.ApplicationWindow):
         self.set_size_request(800, 600)
 
         # load UI
-        self.ui = Gtk.Builder()
-        self.ui.add_from_file(os.path.join(self.c.resources_dir, "ui", f"{self.id}.ui"))
+        self.ui = self.c.load_ui(self.id)
         self.set_child(self.ui.get_objects()[0])
 
     def load_css(self, name: str):

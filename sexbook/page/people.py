@@ -27,8 +27,5 @@ class People(BasePage):
             i += 1
 
     class Item(BaseListItem):
-        def __init__(self, c: BasePage, i: int, person: Crush, **properties):
-            super().__init__(c, **properties)
-            name = self.ui.get_object("name")
-            name.get_buffer().set_text(f"{i + 1}. {person.vis_name()}")
-            # FIXME TextViews are not updated after this change!
+        def on_create_item(self, i: int, data: Crush):
+            self.ui.get_object("name").set_text(f"{i + 1}. {data.vis_name()}")

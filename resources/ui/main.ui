@@ -16,6 +16,14 @@
             </object>
         </child>
 
+        <!--<child>
+            <object class="GtkCalendar" id="calendar">
+                <property name="show-day-names">true</property>
+                <property name="show-heading">true</property>
+                <property name="show-week-numbers">false</property>
+            </object>
+        </child>-->
+
         <child>
             <object class="GtkDropDown" id="filter"/>
         </child>

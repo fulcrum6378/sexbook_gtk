@@ -25,28 +25,30 @@ class Main(BasePage):
         self.ui_list: Gtk.ListBox = self.ui.get_object("list")
         self.ui_filter: Gtk.DropDown = self.ui.get_object("filter")
 
+        # ui_filter
+        self.ui_filter.connect("notify::selected-item", self.on_filter_selected)
+
         # do the filtering and listing
         self.reset()
 
     def reset(self):
 
-        # create filters and pick one
+        # create filters and display them
         self.create_filters()
-        self.filter = -1 if self.filter is None else self.filter
-
-        # display filters in the UI
         filter_names = list()
         i = 1
         months = self.c.text("gregorianMonths")
         for f in self.filters:
             filter_names.append(f"{i}. {months[f.month - 1]} {f.year} : {{{len(f.reports)}}}")
             i += 1
+        self.ui_filter.usage_count = 0
         # noinspection PyTypeChecker
         self.ui_filter.set_model(Gtk.StringList.new(filter_names))
-        self.ui_filter.set_selected(self.filter if self.filter >= 0 else len(self.filters) + self.filter)
 
-        # arrange a list
-        self.arrangeList()
+        # pick a filter and apply it
+        pick_filter = -1 if self.filter is None else self.filter
+        self.apply_filter(pick_filter)
+        self.ui_filter.set_selected(self.filter if pick_filter >= 0 else len(self.filters) + pick_filter)
 
     def create_filters(self):
         self.filters = []
@@ -61,12 +63,22 @@ class Main(BasePage):
         self.filters.sort()
 
     # noinspection PyShadowingNames
-    def arrangeList(self):
+    def apply_filter(self, f: int):
+        self.filter = f
         current_filter = self.filters[self.filter]
         current_filter.reports.sort(key=lambda r_id: self.c.reports[r_id].time)
 
+        self.ui_list.remove_all()
         for r_id in current_filter.reports:
             self.ui_list.insert(Main.Item(self, 0, self.c.reports[r_id]), -1)  # -1 appends to the end.
+
+    # noinspection PyUnusedLocal
+    @staticmethod
+    def on_filter_selected(dropdown: Gtk.DropDown, event_parameter) -> None:
+        dropdown.usage_count += 1
+        if dropdown.usage_count < 3: return
+        c: Main = dropdown.get_parent().get_parent()
+        c.apply_filter(dropdown.get_selected())
 
     class Item(BaseListItem):
         def on_create_item(self, i: int, report: Report):

@@ -12,7 +12,7 @@ from gi.repository import Gtk
 class Main(BasePage):
     """
     :ivar filters a list of all `Report.Filter`s
-    :ivar filter a `Report.Filter` chosen out of the list of `filters`
+    :ivar filter index of the chosen `Report.Filter` out of `filters`
 
     :ivar ui_list
     :ivar ui_filter
@@ -25,27 +25,9 @@ class Main(BasePage):
         self.filters: list[Report.Filter] = []
         self.filter: Optional[int] = None
 
-        # root layout
-        # root = Gtk.Box(orientation=Gtk.Orientation.VERTICAL)
-        # self.set_child(root)
-        # cl = Gtk.ConstraintLayout()
-        # self.set_layout_manager(cl)
-
-        # list layout
-        # scroller = Gtk.ScrolledWindow()
-        # root.append(scroller)
-        # self.list_box: Gtk.ListBox = Gtk.ListBox()
-        # self.list_box.add_css_class("yellow_box_lister")
-        # scroller.set_child(self.list_box)
-
-        # dropdown
-        # dropdown = Gtk.DropDown()
-        # dropdown.set_model(Gtk.StringList.new(["Option A", "Option B", "Option C"]))
-        # root.append(dropdown)
-
         # listing
-        self.ui_list = self.ui.get_object("list")
-        self.ui_filter = self.ui.get_object("filter")
+        self.ui_list: Gtk.ListBox = self.ui.get_object("list")
+        self.ui_filter: Gtk.DropDown = self.ui.get_object("filter")
         self.reset()
 
     def reset(self):
@@ -57,11 +39,13 @@ class Main(BasePage):
         # display filters in the UI
         filter_names = list()
         i = 1
+        months = self.c.text("gregorianMonths")
         for f in self.filters:
-            filter_names.append(f"{i}. {f.month} . {f.year}")
+            filter_names.append(f"{i}. {months[f.month - 1]} {f.year} : {{{len(f.reports)}}}")
             i += 1
         # noinspection PyTypeChecker
         self.ui_filter.set_model(Gtk.StringList.new(filter_names))
+        self.ui_filter.set_selected(self.filter if self.filter >= 0 else len(self.filters) + self.filter)
 
         # arrange a list
         self.arrangeList()

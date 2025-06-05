@@ -2,8 +2,12 @@
   <dictionary name="fulcr">
     <words>
       <w>crsh</w>
+      <w>halign</w>
+      <w>hexpand</w>
       <w>ogsm</w>
+      <w>parastesh</w>
       <w>tablename</w>
+      <w>vexpand</w>
     </words>
   </dictionary>
 </component>

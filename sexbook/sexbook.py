@@ -1,6 +1,7 @@
 import os
 
 import gi
+import yaml
 from sqlalchemy import create_engine, select
 from sqlalchemy.engine.base import Engine
 from sqlalchemy.orm import Session
@@ -17,11 +18,15 @@ class Sexbook(Gtk.Application):
     """
     :ivar resources_dir
     :ivar data_dir
+
     :ivar db: SQLAlchemy database engine
     :ivar reports: all [Report] instances in the database
     :ivar people: all [Crush] instances in the database
     :ivar places: all [Place] instances in the database
     :ivar guesses: all [Guess] instances in the database
+
+    :ivar lang ISO code of the current language
+    :ivar dictionary containing all translations
     """
 
     # noinspection PyTypeChecker
@@ -46,6 +51,10 @@ class Sexbook(Gtk.Application):
             self.places: list[Place] = session.scalars(select(Place)).all()
             self.guesses: list[Guess] = session.scalars(select(Guess)).all()
 
+        # load translations
+        self.lang = "en"
+        self.dictionary = yaml.safe_load(open(os.path.join("resources", "lang", self.lang + ".yaml"), "r").read())
+
     def do_activate(self):
         # load the global CSS
         # noinspection PyArgumentList
@@ -67,3 +76,6 @@ class Sexbook(Gtk.Application):
         css_provider = Gtk.CssProvider()
         css_provider.load_from_path(os.path.join(self.resources_dir, "css", f"{name}.css"))
         return css_provider
+
+    def text(self, text_id: str) -> str | list[str]:
+        return self.dictionary[text_id]

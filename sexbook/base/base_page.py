@@ -13,7 +13,8 @@ class BasePage(Gtk.ApplicationWindow):
 
     def __init__(self, application: Gtk.Application, id: str):
         super().__init__(application=application,
-                         title="Sexbook" + (f" - {id.capitalize()}" if id != "main" else ""))
+                         title=(application.text("app_name") +
+                                (f" - {application.text(id)}" if id != "main" else "")))
         self.c = self.get_application()
         self.id = id
         self.set_size_request(800, 600)

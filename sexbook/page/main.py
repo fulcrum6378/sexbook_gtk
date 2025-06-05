@@ -25,7 +25,8 @@ class Main(BasePage):
         self.ui_list: Gtk.ListBox = self.ui.get_object("list")
         self.ui_filter: Gtk.DropDown = self.ui.get_object("filter")
 
-        # ui_filter
+        # layout
+        self.c.load_css("main")
         self.ui_filter.connect("notify::selected-item", self.on_filter_selected)
 
         # do the filtering and listing
@@ -35,7 +36,7 @@ class Main(BasePage):
 
         # create filters and display them
         self.create_filters()
-        filter_names = list()
+        filter_names = list[str]()
         i = 1
         months = self.c.text("gregorianMonths")
         for f in self.filters:
@@ -53,7 +54,7 @@ class Main(BasePage):
     def create_filters(self):
         self.filters = []
         for id, r in self.c.reports.items():
-            f = Report.Filter.from_timestamp(r.time)
+            f = Report.Filter(r)
             try:
                 index = self.filters.index(f)
                 f = self.filters[index]
@@ -82,4 +83,7 @@ class Main(BasePage):
 
     class Item(BaseListItem):
         def on_create_item(self, i: int, report: Report):
+            # noinspection PyUnresolvedReferences
+            self.ui.get_object("date")\
+                .set_text(f"{self.c.c.text("shortGregorianMonths")[report.datetime.month - 1]} {report.datetime.day}")
             self.ui.get_object("name").set_text(report.name)

@@ -57,12 +57,7 @@ class Sexbook(Gtk.Application):
 
     def do_activate(self):
         # load the global CSS
-        # noinspection PyArgumentList
-        Gtk.StyleContext.add_provider_for_display(
-            Gdk.Display.get_default(),
-            self.load_css("global"),
-            Gtk.STYLE_PROVIDER_PRIORITY_APPLICATION
-        )
+        self.load_css("global")
 
         # launch the `Main` page
         Main(self).present()
@@ -72,10 +67,15 @@ class Sexbook(Gtk.Application):
         builder.add_from_file(os.path.join(self.resources_dir, "ui", f"{name}.ui"))
         return builder
 
-    def load_css(self, name: str) -> Gtk.CssProvider:
+    def load_css(self, name: str) -> None:
         css_provider = Gtk.CssProvider()
         css_provider.load_from_path(os.path.join(self.resources_dir, "css", f"{name}.css"))
-        return css_provider
+        # noinspection PyArgumentList
+        Gtk.StyleContext.add_provider_for_display(
+            Gdk.Display.get_default(),
+            css_provider,
+            Gtk.STYLE_PROVIDER_PRIORITY_APPLICATION
+        )
 
     def text(self, text_id: str) -> str | list[str]:
         return self.dictionary[text_id]

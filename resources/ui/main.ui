@@ -25,7 +25,9 @@
         </child>-->
 
         <child>
-            <object class="GtkDropDown" id="filter"/>
+            <object class="GtkDropDown" id="filter">
+                <property name="css-classes">bottom_dropdown</property>
+            </object>
         </child>
     </object>
 </interface>

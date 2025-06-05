@@ -1,0 +1,14 @@
+.report_main {
+    padding: 15px 30px;
+}
+.report_date {
+    font-size: 18px;
+    font-weight: 700;
+    padding: 0 15px;
+}
+.report_name {
+    font-size: 15px;
+    padding: 0 25px;
+}
+.report_overflow {
+}

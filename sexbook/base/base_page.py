@@ -31,7 +31,3 @@ class BasePage(Gtk.ApplicationWindow):
     @abstractmethod
     def on_create(self):
         pass
-
-    def load_css(self, name: str):
-        self.get_style_context() \
-            .add_provider(self.c.load_css(name), Gtk.STYLE_PROVIDER_PRIORITY_APPLICATION)

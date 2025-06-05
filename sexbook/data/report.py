@@ -18,7 +18,6 @@ class Report(Model):
     plac: Mapped[Optional[int]]
     ogsm: Mapped[bool] = mapped_column(default=True)
 
-    # noinspection PyAttributeOutsideInit
     def analyse(self):
         self.analysis = map(
             lambda s: s.strip(),
@@ -66,16 +65,13 @@ class Report(Model):
         :ivar reports ID numbers of the `Report`s that belong to this timeframe
         """
 
-        def __init__(self, year: int, month: int):
-            self.year: int = year
-            self.month: int = month
+        def __init__(self, report):
+            if not hasattr(report, "datetime"):
+                report.datetime = datetime.fromtimestamp(report.time / 1000.0)
+            self.year: int = report.datetime.year
+            self.month: int = report.datetime.month
             self.id = (self.year << 4) | self.month
             self.reports: list[int] = list()
-
-        @classmethod
-        def from_timestamp(cls, timestamp: int):
-            dt = datetime.fromtimestamp(timestamp / 1000.0)
-            return cls(dt.year, dt.month)
 
         def __hash__(self):
             return self.id

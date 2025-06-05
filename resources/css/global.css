@@ -9,7 +9,11 @@
 }
 .yellow_box {
     background-color: var(--CP);
-    padding: 15px 30px;
-    margin: 0;
-    border-radius: 10px;
+    margin: 4px 15px;
+    border-radius: 8px;
+}
+.bottom_dropdown {
+    font-size: 16px;
+    line-height: 32px;
+    /* paddings will be applied to the entire widget, not the text. */
 }

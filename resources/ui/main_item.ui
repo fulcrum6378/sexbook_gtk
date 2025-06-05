@@ -3,14 +3,34 @@
     <requires lib="gtk" version="4.0"/>
     <object class="GtkBox">
         <property name="css-classes">yellow_box</property>
-        <property name="orientation">horizontal</property>
-        <property name="margin-top">4</property>
-        <property name="margin-bottom">4</property>
-        <property name="margin-start">15</property>
-        <property name="margin-end">15</property>
+        <property name="orientation">vertical</property>
+
         <child>
-            <object class="GtkLabel" id="name">
-                <property name="xalign">0.0</property> <!-- 0.0 = start, 1.0 = end -->
+            <object class="GtkBox" id="main">
+                <property name="css-classes">report_main</property>
+                <property name="orientation">horizontal</property>
+
+                <child>
+                    <object class="GtkLabel" id="date">
+                        <property name="css-classes">report_date</property>
+                        <property name="xalign">0.0</property> <!-- 0.0 = start, 1.0 = end -->
+                    </object>
+                </child>
+
+                <child>
+                    <object class="GtkLabel" id="name">
+                        <property name="css-classes">report_name</property>
+                        <property name="xalign">0.0</property> <!-- 0.0 = start, 1.0 = end -->
+                    </object>
+                </child>
+            </object>
+        </child>
+
+        <child>
+            <object class="GtkBox" id="overflow">
+                <property name="css-classes">report_overflow</property>
+                <property name="orientation">vertical</property>
+                <property name="visible">false</property>
             </object>
         </child>
     </object>

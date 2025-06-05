@@ -30,5 +30,5 @@ class People(BasePage):
             i += 1
 
     class Item(BaseListItem):
-        def on_create_item(self, i: int, data: Crush):
-            self.ui.get_object("name").set_text(f"{i + 1}. {data.vis_name()}")
+        def on_create_item(self, i: int, person: Crush):
+            self.ui.get_object("name").set_text(f"{i + 1}. {person.vis_name()}")

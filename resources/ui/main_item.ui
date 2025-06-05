@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<interface>
+    <requires lib="gtk" version="4.0"/>
+    <object class="GtkBox">
+        <property name="css-classes">yellow_box</property>
+        <property name="orientation">vertical</property>
+        <property name="margin-top">4</property>
+        <property name="margin-bottom">4</property>
+        <property name="margin-start">15</property>
+        <property name="margin-end">15</property>
+        <child>
+            <object class="GtkLabel" id="name">
+                <property name="xalign">0.0</property> <!-- 0.0 = start, 1.0 = end -->
+            </object>
+        </child>
+    </object>
+</interface>

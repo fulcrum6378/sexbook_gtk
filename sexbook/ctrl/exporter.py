@@ -33,28 +33,28 @@ class Exporter:
 
     @staticmethod
     def import_(path: str) -> Exported:
-        data: dict = json.load(open(path, 'r', encoding='utf-8'))
+        data: dict = json.load(open(path, "r", encoding="utf-8"))
         return Exporter.Exported(
             sorted(
-                [Report.from_json(i) for i in data['reports']],
+                [Report.from_json(i) for i in data["reports"]],
                 key=lambda i: i.time
             ),
             sorted(
-                [Crush.from_json(i) for i in data['crushes']],
+                [Crush.from_json(i) for i in data["crushes"]],
                 key=lambda i: i.key
             ),
             sorted(
-                [Place.from_json(i) for i in data['places']],
-                key=lambda i: i.name if i.name is not None else ''
+                [Place.from_json(i) for i in data["places"]],
+                key=lambda i: i.name if i.name is not None else ""
             ),
             sorted(
                 sorted(
-                    [Guess.from_json(i) for i in data['guesses']],
-                    key=lambda i: i.crsh if i.crsh is not None else ''
+                    [Guess.from_json(i) for i in data["guesses"]],
+                    key=lambda i: i.crsh if i.crsh is not None else ""
                 ),
                 key=lambda i: i.sinc if i.sinc is not None else 0
             ),
-            data['settings']
+            data["settings"]
         )
 
     @staticmethod

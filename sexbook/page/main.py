@@ -2,7 +2,7 @@ from typing import Optional
 
 import gi
 
-from sexbook.base import BasePage
+from sexbook.base import BasePage, BaseListItem
 from sexbook.data import Report
 
 gi.require_version("Gtk", "4.0")
@@ -51,7 +51,7 @@ class Main(BasePage):
         self.arrangeList()
 
     def create_filters(self):
-        self.filters = list()
+        self.filters = []
         for id, r in self.c.reports.items():
             f = Report.Filter.from_timestamp(r.time)
             try:
@@ -68,18 +68,8 @@ class Main(BasePage):
         current_filter.reports.sort(key=lambda r_id: self.c.reports[r_id].time)
 
         for r_id in current_filter.reports:
-            report = self.c.reports[r_id]
+            self.ui_list.insert(Main.Item(self, 0, self.c.reports[r_id]), -1)  # -1 appends to the end.
 
-            list_row = Gtk.ListBoxRow()
-            self.ui_list.insert(list_row, -1)  # -1 appends to the end.
-
-            box = Gtk.Box(orientation=Gtk.Orientation.HORIZONTAL)
-            box.set_margin_top(4)
-            box.set_margin_bottom(4)
-            box.set_margin_start(15)
-            box.set_margin_end(15)
-            box.add_css_class("yellow_box")
-            list_row.set_child(box)
-
-            label = Gtk.Label(label=report.name)
-            box.append(label)
+    class Item(BaseListItem):
+        def on_create_item(self, i: int, report: Report):
+            self.ui.get_object("name").set_text(report.name)

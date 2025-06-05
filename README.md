@@ -18,6 +18,7 @@ Sexbook/
 │      ├─────── data/          model (MVC)
 │      ├─────── page/          pages of the app (GTK application windows)
 │      ├─────── stat/          everything related to statistics
+├───── main.py                 launches the program
 ```
 
 ## Development

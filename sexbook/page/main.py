@@ -14,49 +14,56 @@ class Main(BasePage):
     :ivar filters a list of all `Report.Filter`s
     :ivar filter a `Report.Filter` chosen out of the list of `filters`
 
-    :ivar list_box
+    :ivar ui_list
+    :ivar ui_filter
     """
 
     def __init__(self, application: Gtk.Application):
         super().__init__(application, "main")
 
         # default fields
-        self.filters: set[Report.Filter] = set()
-        self.filter: Optional[Report.Filter] = None
+        self.filters: list[Report.Filter] = []
+        self.filter: Optional[int] = None
 
         # root layout
-        root = Gtk.Box(orientation=Gtk.Orientation.VERTICAL)
-        self.set_child(root)
-        cl = Gtk.ConstraintLayout()
-        self.set_layout_manager(cl)
+        # root = Gtk.Box(orientation=Gtk.Orientation.VERTICAL)
+        # self.set_child(root)
+        # cl = Gtk.ConstraintLayout()
+        # self.set_layout_manager(cl)
 
         # list layout
-        scroller = Gtk.ScrolledWindow()
-        root.append(scroller)
-        self.list_box: Gtk.ListBox = Gtk.ListBox()
-        self.list_box.add_css_class("yellow_box_lister")
-        scroller.set_child(self.list_box)
+        # scroller = Gtk.ScrolledWindow()
+        # root.append(scroller)
+        # self.list_box: Gtk.ListBox = Gtk.ListBox()
+        # self.list_box.add_css_class("yellow_box_lister")
+        # scroller.set_child(self.list_box)
 
         # dropdown
-        dropdown = Gtk.DropDown()
-        dropdown.set_model(Gtk.StringList.new(["Option A", "Option B", "Option C"]))
-        root.append(dropdown)
+        # dropdown = Gtk.DropDown()
+        # dropdown.set_model(Gtk.StringList.new(["Option A", "Option B", "Option C"]))
+        # root.append(dropdown)
 
-        # layout constraints
-        cl.add_constraint(
-            Gtk.Constraint.new(
-                dropdown, Gtk.ConstraintAttribute.BOTTOM,
-                Gtk.ConstraintRelation.EQ,
-                root, Gtk.ConstraintAttribute.BOTTOM,
-                12, 12, Gtk.ConstraintStrength.REQUIRED)
-        )
-
-        # begin filtering and arranging
+        # listing
+        self.ui_list = self.ui.get_object("list")
+        self.ui_filter = self.ui.get_object("filter")
         self.reset()
 
     def reset(self):
+
+        # create filters and pick one
         self.create_filters()
-        self.filter = list(self.filters)[-1 if self.filter is None else self.filter]
+        self.filter = -1 if self.filter is None else self.filter
+
+        # display filters in the UI
+        filter_names = list()
+        i = 1
+        for f in self.filters:
+            filter_names.append(f"{i}. {f.month} . {f.year}")
+            i += 1
+        # noinspection PyTypeChecker
+        self.ui_filter.set_model(Gtk.StringList.new(filter_names))
+
+        # arrange a list
         self.arrangeList()
 
     def create_filters(self):
@@ -73,12 +80,14 @@ class Main(BasePage):
 
     # noinspection PyShadowingNames
     def arrangeList(self):
-        self.filter.reports.sort(key=lambda r_id: self.c.reports[r_id].time)
-        for r_id in self.filter.reports:
+        current_filter = self.filters[self.filter]
+        current_filter.reports.sort(key=lambda r_id: self.c.reports[r_id].time)
+
+        for r_id in current_filter.reports:
             report = self.c.reports[r_id]
 
             list_row = Gtk.ListBoxRow()
-            self.list_box.insert(list_row, -1)  # -1 appends to the end.
+            self.ui_list.insert(list_row, -1)  # -1 appends to the end.
 
             box = Gtk.Box(orientation=Gtk.Orientation.HORIZONTAL)
             box.set_margin_top(4)

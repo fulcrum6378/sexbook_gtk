@@ -8,6 +8,9 @@ from gi.repository import Gtk
 
 
 class People(BasePage):
+    """
+    :ivar ui_list
+    """
 
     def __init__(self, application: Gtk.Application):
         super().__init__(application, "people")
@@ -15,15 +18,15 @@ class People(BasePage):
         # data
         self.list: list[Crush] = list(self.c.people.values())
 
-        # list_box
-        self.list_box = self.ui.get_object("list")
+        # listing
+        self.ui_list = self.ui.get_object("list")
         self.arrangeList()
 
     def arrangeList(self):
         self.list.sort(key=lambda p: p.vis_name().lower())
         i = 0
         for person in self.list:
-            self.list_box.insert(People.Item(self, i, person), -1)  # -1 appends to the end.
+            self.ui_list.insert(People.Item(self, i, person), -1)  # -1 appends to the end.
             i += 1
 
     class Item(BaseListItem):

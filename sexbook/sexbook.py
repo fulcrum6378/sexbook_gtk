@@ -7,7 +7,7 @@ from sqlalchemy.orm import Session
 
 from sexbook.base import Model
 from sexbook.data import *
-from sexbook.page import People
+from sexbook.page import Main
 
 gi.require_version("Gtk", "4.0")
 from gi.repository import Gdk, GLib, Gtk
@@ -55,9 +55,8 @@ class Sexbook(Gtk.Application):
             Gtk.STYLE_PROVIDER_PRIORITY_APPLICATION
         )
 
-        # launch the main page
-        # Main(self).present()
-        People(self).present()
+        # launch the `Main` page
+        Main(self).present()
 
     def load_ui(self, name: str) -> Gtk.Builder:
         builder = Gtk.Builder()

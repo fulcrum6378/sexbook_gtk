@@ -9,17 +9,17 @@ from gi.repository import Gtk
 
 class People(BasePage):
     """
-    :ivar ui_list
+    :ivar list a changeable list of all `Crush`es being shown in `ui_list`
+
+    :ivar ui_list displays `list`
     """
 
-    def __init__(self, application: Gtk.Application):
-        super().__init__(application, "people")
-
-        # data
+    def on_create(self):
         self.list: list[Crush] = list(self.c.people.values())
 
-        # listing
-        self.ui_list = self.ui.get_object("list")
+        self.ui_list: Gtk.ListBox = self.ui.get_object("list")
+
+        # do the listing
         self.arrangeList()
 
     def arrangeList(self):

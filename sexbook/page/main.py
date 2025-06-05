@@ -14,20 +14,18 @@ class Main(BasePage):
     :ivar filters a list of all `Report.Filter`s
     :ivar filter index of the chosen `Report.Filter` out of `filters`
 
-    :ivar ui_list
-    :ivar ui_filter
+    :ivar ui_list displays `Report.Filter.reports`
+    :ivar ui_filter displays `filters`
     """
 
-    def __init__(self, application: Gtk.Application):
-        super().__init__(application, "main")
-
-        # default fields
+    def on_create(self):
         self.filters: list[Report.Filter] = []
         self.filter: Optional[int] = None
 
-        # listing
         self.ui_list: Gtk.ListBox = self.ui.get_object("list")
         self.ui_filter: Gtk.DropDown = self.ui.get_object("filter")
+
+        # do the filtering and listing
         self.reset()
 
     def reset(self):
